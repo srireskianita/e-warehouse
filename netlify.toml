@@ -1,4 +1,0 @@
-[build]
-  command = "npm start"
-  publish="client/build"
-  base = "index.html"
