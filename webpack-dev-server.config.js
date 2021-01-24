@@ -28,7 +28,7 @@ const config = {
         // Enables Hot Modules Replacement
         new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackPlugin({
-            template: path.resolve('./index.html'),
+            template: path.resolve('./build/index.html'),
           }),
     ],
     module: {
