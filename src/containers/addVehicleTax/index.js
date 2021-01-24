@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { Header, Segment, Input, Label, Form, Button, Message, Grid } from "semantic-ui-react";
+import { Header, Segment, Input, Label, Form, Button, Message, Grid,Progress } from "semantic-ui-react";
 import { push } from 'react-router-redux';
 import axios from 'axios';
 
