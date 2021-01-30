@@ -189,11 +189,11 @@ class AddBorrowTransaction extends Component {
                             content='Hapus Data'
                             on='hover'
                         />
-                        <Popup
+                        {/* <Popup
                             trigger={<Icon name='pencil' size='large' onClick={this.onPressEdit.bind(this, borrowTransaction)} />}
                             content='Ubah Data'
                             on='hover'
-                        />
+                        /> */}
                         <Popup
                             trigger={<Icon name='exchange' size='large' onClick={this.onPressReturn.bind(this, borrowTransaction)} />}
                             content='Pengembalian Alat Kerja'

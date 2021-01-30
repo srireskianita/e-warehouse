@@ -214,11 +214,11 @@ class AddServiceItem extends Component {
                             content='Hapus Data'
                             on='hover'
                         />
-                        <Popup
+                        {/* <Popup
                             trigger={<Icon name='pencil' size='large' onClick={this.onPressEdit.bind(this, serviceItem)} />}
                             content='Ubah Data'
                             on='hover'
-                        />
+                        /> */}
                         <Popup
                             trigger={<Icon name='configure' size='large' onClick={this.onPressReturn.bind(this, serviceItem)} />}
                             content='Penyelesaian Perbaikan'
