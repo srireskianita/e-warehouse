@@ -45,7 +45,8 @@ class AddVehicleTax extends Component {
         super();
         this.state = {
             file: '',
-            loadedPdf: 0
+            loadedPdf: 0,
+            selectedFile: null,
         }
         this.onChangeFileUpload = this.onChangeFileUpload.bind(this);
     }
@@ -148,7 +149,6 @@ class AddVehicleTax extends Component {
         const { handleSubmit, pristine, initialValues, errors, submitting } = this.props;
         const { token, user, isLoggingIn, addingVehicleTaxError, vehicleTax } = this.props.vehicleTax;
         let error = null;
-        console.log('add vehicle tax')
         if (addingVehicleTaxError) {
             error = (
                 <Message negative>

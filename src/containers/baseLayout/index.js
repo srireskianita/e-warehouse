@@ -72,7 +72,7 @@ class BaseLayout extends Component {
         if (isManajemenDireksi) {
             approveVehicleTaxMenuItem  = (
                 <Dropdown.Item onClick={this.handleClick.bind(this, "approveVehicleTax")} >
-                    Approval Vehicle Tax
+                    Approval Pajak Kendaraan
                 </Dropdown.Item>
             );
         }

@@ -40,9 +40,9 @@ class UpdateBorrowTransaction extends Component {
     }
 
     componentWillMount() {
-        const idParam = this.props.location.pathname.split("/")[2]; // Hacky Way
+        const idParam = this.props.location.pathname.split("/")[3]; // Hacky Way
         const { dispatch,token } = this.props;
-        if (idParam !== "add") {
+        if (idParam) {
             dispatch(setUpdatingBorrowTransaction(idParam));
         }
     }

@@ -189,13 +189,13 @@ class AddEndServiceItem extends Component {
                         </Form.Field>
                         <Form.Field inline>
                             <label>Nama Alat Kerja</label>
-                            <Field name="item_id" placeholder="Masukkan Nama Alat Kerja" component={this.renderField} disabled></Field>
+                            <Field name="item_id" placeholder="Masukkan Nama Alat Kerja" component={this.renderField} disabled>
                             {/* <Field name= 'item_id' component="select" > */}
-                            {/* <option></option>
+                            <option></option>
                             {items.map((item) => (
                                     <option key={item.id} value={item.id}>{item.item_name.en}</option>
-                            ))} */}
-                            {/* </Field> */}
+                            ))}
+                            </Field>
                         </Form.Field>
                         <Form.Field inline>
                             <label>Biaya Perbaikan</label>

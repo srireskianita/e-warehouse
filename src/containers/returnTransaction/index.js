@@ -136,10 +136,10 @@ class AddReturnTransaction extends Component {
                         <Form.Field inline>
                             <label>Nama Alat Kerja</label>
                             <Field name= 'item_id' disabled component = {this.renderField} >
-                            {/* <option></option>
+                            <option></option>
                             {items.map((item) => (
                                     <option key={item.id} value={item.id}>{item.item_name.en}</option>
-                            ))} */}
+                            ))}
                             </Field>
                         </Form.Field>
                         <Form.Field inline>

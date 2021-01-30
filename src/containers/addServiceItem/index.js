@@ -88,7 +88,6 @@ class AddServiceItem extends Component {
         const { token } = this.props.auth;
         values.token = token;
         values = Object.assign(values, {...this.state})
-        console.log(values)
         if (values.id) {
             return dispatch(updateServiceItem(values)).then(function (data) {
                 dispatch(push("/serviceItem"));
