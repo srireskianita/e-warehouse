@@ -185,7 +185,7 @@ class AddEndServiceItem extends Component {
                     <Form onSubmit={handleSubmit(this.onSubmit.bind(this))} loading={isLoggingIn}>
                         <Form.Field>
                             <label>Tanggal Mulai Perbaikan</label>
-                            <Field type="date" name="start_service_date" placeholder="Masukkan Tanggal Mulai Perbaikan Alat Kerja" component={this.renderField} disabled></Field>
+                            <Field name="start_service_date" placeholder="Masukkan Tanggal Mulai Perbaikan Alat Kerja" component={this.renderField} disabled></Field>
                         </Form.Field>
                         <Form.Field inline>
                             <label>Nama Alat Kerja</label>
