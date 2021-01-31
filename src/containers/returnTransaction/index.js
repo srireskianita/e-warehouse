@@ -104,7 +104,7 @@ class AddReturnTransaction extends Component {
 
     render() {
         const { handleSubmit, pristine, initialValues, errors, submitting } = this.props;
-        const { token, user, isLoggingIn, addingBorrowTransactionError, borrowTransaction } = this.props.borrowTransaction;
+        let { token, user, isLoggingIn, addingBorrowTransactionError, borrowTransaction } = this.props.borrowTransaction;
         let error = null;
 
         let items = this.state.items; 
@@ -135,11 +135,7 @@ class AddReturnTransaction extends Component {
                         </Form.Field>
                         <Form.Field inline>
                             <label>Nama Alat Kerja</label>
-                            <Field name= 'item_id' disabled component = {this.renderField} >
-                            <option></option>
-                            {items.map((item) => (
-                                    <option key={item.id} value={item.id}>{item.item_name.en}</option>
-                            ))}
+                            <Field name= 'item_name' disabled component = {this.renderField} >
                             </Field>
                         </Form.Field>
                         <Form.Field inline>

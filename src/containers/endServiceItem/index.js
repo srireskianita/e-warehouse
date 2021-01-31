@@ -42,7 +42,7 @@ class AddEndServiceItem extends Component {
     componentWillMount() {
         const idParam = this.props.location.pathname.split("/")[2]; // Hacky Way
         const { dispatch,token } = this.props;
-        if (idParam !== "add") {
+        if (idParam) {
             dispatch(setUpdatingServiceItem(idParam));
         }
     }
@@ -115,7 +115,7 @@ class AddEndServiceItem extends Component {
         console.log(values)
         if (values.id) {
             return dispatch(updateServiceItem(values)).then(function (data) {
-                dispatch(push("/serviceItem"));
+                dispatch(push("/serviceItem/"));
             });
         }
         else {
@@ -158,10 +158,10 @@ class AddEndServiceItem extends Component {
 
     render() {
         const { handleSubmit, pristine, initialValues, errors, submitting } = this.props;
-        const { token, user, isLoggingIn, addingServiceItemError, serviceItem } = this.props.serviceItem;
+        let { token, user, isLoggingIn, addingServiceItemError, serviceItem } = this.props.serviceItem;
         let error = null;
-
         let items = this.state.items; 
+ 
         if (addingServiceItemError) {
             error = (
                 <Message negative>
@@ -189,13 +189,13 @@ class AddEndServiceItem extends Component {
                         </Form.Field>
                         <Form.Field inline>
                             <label>Nama Alat Kerja</label>
-                            <Field name="item_id" placeholder="Masukkan Nama Alat Kerja" component={this.renderField} disabled>
+                            <Field name="item_name" placeholder="Masukkan Nama Alat Kerja" component={this.renderField} disabled></Field>
                             {/* <Field name= 'item_id' component="select" > */}
-                            <option></option>
+                            {/* <option></option>
                             {items.map((item) => (
-                                    <option key={item.id} value={item.id}>{item.item_name.en}</option>
-                            ))}
-                            </Field>
+                                    <option key={item.id} value={item.id}>{item.item_name.en}</option>  
+                            ))} */}
+                            
                         </Form.Field>
                         <Form.Field inline>
                             <label>Biaya Perbaikan</label>
