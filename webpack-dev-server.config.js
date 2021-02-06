@@ -52,11 +52,11 @@ const config = {
                   {
                     loader: 'url-loader',
                     options: {
-                      limit: 40000 // 40 kB
+                      limit: 4000000 // 40 kB
                     }
                   }
                 ]
-              },
+            },
         ],
     },
 };
