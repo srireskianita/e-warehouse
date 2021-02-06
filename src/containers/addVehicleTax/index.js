@@ -210,7 +210,6 @@ class AddVehicleTax extends Component {
 
 function mapStatesToProps(state) {
     const initialValues = state.vehicleTax.vehicleTax;
-    console.log('ini containers',state.vehicleTax)
     return {
         initialValues: initialValues,
         auth: state.auth,

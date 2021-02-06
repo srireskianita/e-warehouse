@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { Header, Segment, Input, Label, Form, Button, Message, Grid, Select, Dropdown, TextArea } from "semantic-ui-react";
+import { Header, Segment, Input, Label, Form, Button, Message, Grid, Select, Dropdown, TextArea, Progress } from "semantic-ui-react";
 import { push } from 'react-router-redux';
 import axios from 'axios';
 
@@ -32,7 +32,10 @@ class AddEndServiceItem extends Component {
         this.state = {
             items: [],
             picture: '',
-            kwitansi: ''
+            kwitansi: '',
+            loaded: 0,
+            selectedFile: null,
+            loadedPdf: 0
         };
         this.handleChange = this.handleChange.bind(this);
         this.onChangeFileUpload = this.onChangeFileUpload.bind(this);
@@ -128,33 +131,64 @@ class AddEndServiceItem extends Component {
     onChangePictureUpload(event) {
         const formData = new FormData();
         formData.append('file', event.target.files[0]);
-        console.log(event.target.files[0].size)
-        axios.post('https://warehouse-server.herokuapp.com/serviceItem/uploads', formData, { onUploadProgress: true }).then(response => {
-            this.setState({
-                picture: response.data
-            })
-        }).catch(error => {
-            if(event.target.files[0].size > 512000){
-                alert("File is too big!");
-                this.value = "";
-             };
-            console.log('Info: Come from error');
-            console.log(error)
-        }) 
+        axios.post('https://warehouse-server.herokuapp.com/serviceItem/uploads', formData, {
+            onUploadProgress: ProgressEvent => {
+              this.setState({
+                loaded: (ProgressEvent.loaded / ProgressEvent.total*100),
+              })
+            }}).then(response => {
+            if(this.checkFileSize(event)){
+                this.setState({
+                    picture: response.data,
+                    selectedFile: response.data
+    
+                })
+            }
+           
+        }).catch(err => { // then print response status
+            alert(err)
+          })
     }
 
     onChangeFileUpload(event) {
         const formData = new FormData();
         formData.append('file', event.target.files[0]);
-        axios.post('https://warehouse-server.herokuapp.com/serviceItem/uploadspdf', formData, { onUploadProgress: true }).then(response => {
-            this.setState({
-                kwitansi: response.data.path
-            })
-        }).catch(error => {
-            console.log('Info: Come from error');
-            console.log(error)
-        }) 
+        axios.post('https://warehouse-server.herokuapp.com/serviceItem/uploadspdf', formData, {
+            onUploadProgress: ProgressEvent => {
+              this.setState({
+                loadedPdf: (ProgressEvent.loaded / ProgressEvent.total*100),
+              })
+            }}).then(response => {
+            if(this.checkFileSize(event)){
+                this.setState({
+                    kwitansi: response.data.path,
+                    selectedFile: response.data
+    
+                })
+            }
+        }).catch(err => { // then print response status
+            alert(err)
+        })
     }
+
+    checkFileSize=(event)=>{
+        let files = event.target.files
+        let size = 512000
+        let err = ""; 
+        for(var x = 0; x<files.length; x++) {
+        if (files[x].size > size) {
+         err += files[x].type+'\nMaksimal Upload 500 KB\n';
+       }
+     };
+     if (err !== '') {
+        event.target.value = null
+        alert(err)
+        return false
+   }
+   
+   return true;
+   
+   }
 
     render() {
         const { handleSubmit, pristine, initialValues, errors, submitting } = this.props;
@@ -204,6 +238,8 @@ class AddEndServiceItem extends Component {
                         <Form.Field inline>
                             <label>Gambar Setelah Perbaikan</label>
                             <Field name="picture" component={this.renderFieldFile} onChange={this.onChangePictureUpload}></Field>
+                            {this.checkFileSize}
+                            <Progress percent={this.state.loaded} success attached='bottom'></Progress>
                         </Form.Field>
                         <Form.Field inline>
                             <label>Tanggal Selesai Perbaikan</label>
@@ -212,6 +248,8 @@ class AddEndServiceItem extends Component {
                         <Form.Field inline>
                             <label>Kwitansi</label>
                             <Field name="kwitansi" component={this.renderFieldFile} onChange={this.onChangeFileUpload}></Field>
+                            {this.checkFileSize}
+                            <Progress percent={this.state.loadedPdf} success attached='bottom'></Progress>
                         </Form.Field>
                         <Form.Field inline>
                             <label>Rincian Perbaikan</label>

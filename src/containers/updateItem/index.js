@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { Header, Segment, Input, Label, Form, Button, Message, Grid } from "semantic-ui-react";
+import { Header, Segment, Input, Label, Form, Button, Message, Grid, Progress } from "semantic-ui-react";
 import { push } from 'react-router-redux';
 import axios from 'axios';
 
@@ -38,7 +38,10 @@ class UpdateItem extends Component {
         super();
         this.state = {
             item_picture: '',
-            manual_book: ''
+            manual_book: '',
+            loaded: 0,
+            selectedFile: null,
+            loadedPdf: 0
         }
         this.onChangeFileUpload = this.onChangeFileUpload.bind(this);
         this.onChangePictureUpload = this.onChangePictureUpload.bind(this);
@@ -102,27 +105,62 @@ class UpdateItem extends Component {
     onChangePictureUpload(event) {
         const formData = new FormData();
         formData.append('file', event.target.files[0]);
-        axios.post('https://warehouse-server.herokuapp.com/items/uploads', formData, { onUploadProgress: true }).then(response => {
-            this.setState({
-                item_picture: response.data
-            })
-        }).catch(error => {
-            console.log('Info: Come from error');
-            console.log(error)
-        }) 
+        axios.post('https://warehouse-server.herokuapp.com/items/uploads', formData, {
+            onUploadProgress: ProgressEvent => {
+              this.setState({
+                loaded: (ProgressEvent.loaded / ProgressEvent.total*100),
+              })
+            }}).then(response => {
+            if(this.checkFileSize(event)){
+                this.setState({
+                    item_picture: response.data,
+                    selectedFile: response.data
+    
+                })
+            }
+           
+        }).catch(err => { // then print response status
+            alert(err)
+          })
     }
 
     onChangeFileUpload(event) {
         const formData = new FormData();
         formData.append('file', event.target.files[0]);
-        axios.post('https://warehouse-server.herokuapp.com/items/uploads', formData, { onUploadProgress: true }).then(response => {
-            this.setState({
-                manual_book: response.data
-            })
-        }).catch(error => {
-            console.log('Info: Come from error');
-            console.log(error)
-        }) 
+        axios.post('https://warehouse-server.herokuapp.com/items/uploadspdf', formData, {
+            onUploadProgress: ProgressEvent => {
+              this.setState({
+                loadedPdf: (ProgressEvent.loaded / ProgressEvent.total*100),
+              })
+            }}).then(response => {
+            if(this.checkFileSize(event)){
+                this.setState({
+                    manual_book: response.data.path,
+                    selectedFile: response.data
+    
+                })
+            }
+        }).catch(err => { // then print response status
+            alert(err)
+        })
+    }
+
+    checkFileSize=(event)=>{
+        let files = event.target.files
+        let size = 512000
+        let err = ""; 
+        for(var x = 0; x<files.length; x++) {
+        if (files[x].size > size) {
+         err += files[x].type+'\nMaksimal Upload 500 KB\n';
+       }
+     };
+     if (err !== '') {
+        event.target.value = null
+        alert(err)
+        return false
+    }
+    return true;
+        
     }
 
     render() {
@@ -168,20 +206,24 @@ class UpdateItem extends Component {
                             </Field>
                         </Form.Field>
                         <Form.Field inline>
+                            <label>Gambar Alat Kerja</label>
+                            <Field name="item_picture" component={this.renderFieldFile} onChange={this.onChangePictureUpload}></Field>
+                            {this.checkFileSize}
+                            <Progress percent={this.state.loaded} success attached='bottom'></Progress>
+                        </Form.Field>
+                        <Form.Field inline>
                             <label>Tanggal Pembelian</label>
                             <Field type="date" name="purchase_date" placeholder="Masukkan Tanggal Pembelian" component={this.renderField}></Field>
                         </Form.Field>
                         <Form.Field inline>
-                            <label>Harga</label>
-                            <Field name="price" placeholder="Masukkan Harga" component={this.renderField}></Field>
-                        </Form.Field>
-                        <Form.Field inline>
-                            <label>Gambar Alat Kerja</label>
-                            <Field name="item_picture" component={this.renderFieldFile} onChange={this.onChangePictureUpload}></Field>
-                        </Form.Field>
-                        <Form.Field inline>
                             <label>Unggah Buku Panduan (Scan PDF)</label>
                             <Field name="manual_book" component={this.renderFieldFile} onChange={this.onChangeFileUpload}></Field>
+                            {this.checkFileSize}
+                            <Progress percent={this.state.loadedPdf} success attached='bottom'></Progress>
+                        </Form.Field>
+                        <Form.Field inline>
+                            <label>Harga</label>
+                            <Field name="price" placeholder="Masukkan Harga" component={this.renderField}></Field>
                         </Form.Field>
                         <Grid>
                         <Grid.Column textAlign="center">

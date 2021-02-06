@@ -46,6 +46,17 @@ const config = {
                     cacheDirectory: true,
                 },
             },
+            {
+                test: /\.(png|jpg)$/,
+                use: [
+                  {
+                    loader: 'url-loader',
+                    options: {
+                      limit: 40000 // 40 kB
+                    }
+                  }
+                ]
+              },
         ],
     },
 };

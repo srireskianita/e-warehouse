@@ -5,6 +5,7 @@ import { Header, Segment, Input, Label, Form, Button, Message, Grid,Image } from
 import { push } from 'react-router-redux';
 
 import { loginUser } from "./../../actions/AuthActions";
+import myLogo from '../../utils/logo.png';
 
 function validate(values) {
     var errors = {};
@@ -56,8 +57,8 @@ class Login extends Component {
             <Segment textAlign='center'>
                 <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
                 <Grid.Column style={{ maxWidth: 450 }}>
-                <Header as='h2' color='teal' textAlign='center'>
-                    Login e-Warehouse
+                <Header as='h2' color='blue' textAlign='center'>
+                <Image src={myLogo} size='small'/> Login e-Warehouse
                 </Header>
                 {error}
                 <Segment stacked>
@@ -68,7 +69,7 @@ class Login extends Component {
                     <Form.Field inline>
                         <Field name="password" type="password" placeholder="Masukkan Password" component={this.renderField}></Field>
                     </Form.Field>
-                    <Button color='teal' loading={submitting} disabled={submitting} fluid size='large'>Login</Button>
+                    <Button color='blue' loading={submitting} disabled={submitting} fluid size='large'>Login</Button>
                 </Form>
                 </Segment>
                 </Grid.Column>

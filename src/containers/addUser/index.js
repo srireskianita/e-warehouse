@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { Header, Segment, Input, Label, Form, Button, Message, Grid,TextArea,Select } from "semantic-ui-react";
+import { Header, Segment, Input, Label, Form, Button, Message, Grid,TextArea,Select, Checkbox } from "semantic-ui-react";
 import { push } from 'react-router-redux';
 import axios from 'axios';
 
@@ -42,6 +42,16 @@ function validate(values) {
 }
 
 class AddUser extends Component {
+
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+          type: 'password'
+        };
+        this.showHide = this.showHide.bind(this);
+      }
+    
     
     componentWillMount() {
         const idParam = this.props.location.pathname.split("/")[2]; // Hacky Way
@@ -86,6 +96,14 @@ class AddUser extends Component {
             });
         }
     }
+
+    showHide(e){
+        e.preventDefault();
+        e.stopPropagation();
+        this.setState({
+          type: this.state.type === 'input' ? 'password' : 'input'
+        })  
+      }
     render() {
         const { handleSubmit, pristine, initialValues, errors, submitting } = this.props;
         const { token, user, isLoggingIn, addingUserError } = this.props.user;
@@ -147,7 +165,10 @@ class AddUser extends Component {
                         </Form.Field>
                         <Form.Field inline>
                             <label>Password</label>
-                            <Field name="password" placeholder="Mohon Isikan Password Lama Anda" component={this.renderField}></Field>
+                            <Field type={this.state.type}  name="password" placeholder="Mohon Isikan Password Lama Anda" value="password" component={this.renderField}></Field>
+                        </Form.Field>
+                        <Form.Field>
+                        <Checkbox  label='Show password' onClick={this.showHide}>{this.state.type === 'input' ? 'Hide' : 'Show'}</Checkbox>
                         </Form.Field>
                         <Form.Field inline>
                             <label>Divisi Kerja</label>

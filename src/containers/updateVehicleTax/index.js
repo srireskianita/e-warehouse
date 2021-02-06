@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
-import { Header, Segment, Input, Label, Form, Button, Message, Grid } from "semantic-ui-react";
+import { Header, Segment, Input, Label, Form, Button, Message, Grid, Progress } from "semantic-ui-react";
 import { push } from 'react-router-redux';
 import axios from 'axios';
 
@@ -44,7 +44,9 @@ class UpdateVehicleTax extends Component {
     constructor() {
         super();
         this.state = {
-            file: ''
+            file: '',
+            loadedPdf: 0,
+            selectedFile: null,
         }
         this.onChangeFileUpload = this.onChangeFileUpload.bind(this);
     }
@@ -106,17 +108,38 @@ class UpdateVehicleTax extends Component {
         }
     }
 
+    checkFileSize=(event)=>{
+        let files = event.target.files
+        let size = 512000
+        let err = ""; 
+        for(var x = 0; x<files.length; x++) {
+        if (files[x].size > size) {
+         err += files[x].type+'\nMaksimal Upload 500 KB\n';
+       }
+     };
+     if (err !== '') {
+        event.target.value = null
+        alert(err)
+        return false
+   }
+   return true;
+   }
+
     onChangeFileUpload(event) {
         const formData = new FormData();
         formData.append('file', event.target.files[0]);
-        axios.post('https://warehouse-server.herokuapp.com/vehicleTax/uploads', formData, { onUploadProgress: true }).then(response => {
+        axios.post('https://warehouse-server.herokuapp.com/vehicleTax/uploadspdf', formData, {
+            onUploadProgress: ProgressEvent => {
+              this.setState({
+                loadedPdf: (ProgressEvent.loaded / ProgressEvent.total*100),
+              })
+            }}).then(response => {
             this.setState({
-                file: response.data
+                file: response.data.path
             })
-        }).catch(error => {
-            console.log('Info: Come from error');
-            console.log(error)
-        }) 
+        }).catch(err => { // then print response status
+            alert(err)
+        })
     }
 
     render() {
@@ -168,6 +191,8 @@ class UpdateVehicleTax extends Component {
                         <Form.Field inline>
                             <label>Unggah STNK Kendaraan (Scan PDF)</label>
                             <Field name="file" component={this.renderFieldFile} onChange={this.onChangeFileUpload}></Field>
+                            {this.checkFileSize}
+                            <Progress percent={this.state.loadedPdf} success attached='bottom'></Progress>
                         </Form.Field>
                         <Grid>
                         <Grid.Column textAlign="center">
@@ -183,7 +208,6 @@ class UpdateVehicleTax extends Component {
 
 function mapStatesToProps(state) {
     const initialValues = state.vehicleTax.vehicleTax;
-    console.log('ini containers',state.vehicleTax)
     return {
         initialValues: initialValues,
         auth: state.auth,
